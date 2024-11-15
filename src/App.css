@@ -1,38 +1,41 @@
-.App {
-  text-align: center;
+.font-times {
+  font-family: "Times New Roman", Times, serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Add comic-style hover effect */
+article:hover {
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+::-webkit-scrollbar-track {
+  background: #1f2937;
 }
 
-.App-link {
-  color: #61dafb;
+::-webkit-scrollbar-thumb {
+  background: #ef4444;
+  border-radius: 5px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: #dc2626;
+}
+
+/* Add some animation to the search results */
+.ais-Hits-item {
+  transition: all 0.3s ease;
+}
+
+.ais-Hits-item:hover {
+  transform: translateX(10px);
+}
+
+/* Style the search input placeholder */
+::placeholder {
+  color: #9ca3af;
+  opacity: 1;
 }
