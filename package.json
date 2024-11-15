@@ -1,6 +1,7 @@
 {
   "name": "marvel-search",
   "version": "0.1.0",
+  "homepage": "https://lorenzobalderrama.github.io/public",
   "private": true,
   "dependencies": {
     "@craco/craco": "^7.1.0",
@@ -15,12 +16,12 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
-"scripts": {
-  "start": "react-scripts start",
-  "build": "react-scripts build",
-  "test": "react-scripts test",
-  "eject": "react-scripts eject"
-},
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -41,6 +42,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
+    "gh-pages": "^6.2.0",
     "postcss": "^8.4.49",
     "react-app-rewired": "^2.2.1",
     "tailwindcss": "^3.4.15"
