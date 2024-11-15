@@ -1,12 +1,11 @@
 import { liteClient as algoliasearch } from 'algoliasearch/lite';
-import { InstantSearch, SearchBox, Hits } from 'react-instantsearch';
+import { InstantSearch, SearchBox, Hits, Pagination, DynamicWidgets, HierarchicalMenu, RefinementList } from 'react-instantsearch';
 import { useEffect } from 'react';
 import { initializeSynonyms } from './algolia_setup/algoliaConfig';
 import 'instantsearch.css/themes/satellite.css';
 import './App.css';
 
 const searchClient = algoliasearch('JM9I1B7T4G', '8646d541697918336088eeaf888f7f3b');
-
 
 function Hit({ hit }) {
   return (
@@ -49,6 +48,19 @@ function App() {
           Marvel Universe Search
         </h1>
         <InstantSearch searchClient={searchClient} indexName={"marvel_characters"}>
+        <Pagination 
+
+        />
+
+
+        <DynamicWidgets>
+        <HierarchicalMenu
+          attributes={['hierarchical.lvl0', 'hierarchical.lvl1']}
+        />
+        <RefinementList attribute="comics" />
+      </DynamicWidgets>
+
+
           <div className="mb-8">
             <SearchBox 
               className="w-full"
