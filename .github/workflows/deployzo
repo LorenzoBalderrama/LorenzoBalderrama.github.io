@@ -1,0 +1,39 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js (optional if your project requires Node)
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16 # Replace with your Node.js version if needed
+
+      # Step 3: Copy files from 'public' to the root of 'gh-pages' branch
+      - name: Deploy to GitHub Pages
+        run: |
+          mkdir -p public
+          mv public/* .
+          git init
+          git checkout -b gh-pages
+          git add .
+          git commit -m "Deploy GitHub Pages from public folder"
+          git push -f origin gh-pages
+
+      # Step 4: Deploy to GitHub Pages
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
