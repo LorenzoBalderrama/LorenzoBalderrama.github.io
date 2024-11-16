@@ -3,12 +3,11 @@ import { searchClient } from '@algolia/client-search';
 
 const publicKey = "8dad68da29d0f23830792e633c83f822";
 const privateKey = "d87e4b6d3872f796198b2c3642d71f6bae88bb80";
-const client = searchClient('JM9I1B7T4G', '8646d541697918336088eeaf888f7f3b');
+const client = searchClient('74PDHJOPR7', '1a1e9c477658d6adae3ede22d5d4c937');
 
-// Alphabet array for letters A-Z - To limit size of data collected
-const alphabet = 'ABCDEFGHIJKLMNOPQRS'.split('');
-// My personal faves! Doctor Doom | Spider-Girl(May Parker) | Reed Richards | Sue Storm | Ben Grimm | Doctor Voodoo
-const specificCharacterIDs = [1009281, 1009609, 1009459, 1009631, 1009329, 1011500];
+// Date range for comics
+const startYear = 2020;
+const endYear = 2024;
 
 // Marvel API hash
 const createHash = (ts, privateKey, publicKey) => {
@@ -19,112 +18,71 @@ const createHash = (ts, privateKey, publicKey) => {
 const processRecords = async () => {
   const ts = new Date().getTime().toString();
   const hash = createHash(ts, privateKey, publicKey);
-  const limit = 5; // Limit to 10 comics per character and 10 characters per letter
+  const limit = 10; // Adjust limit as needed
+  
+  const allComics = [];
 
-  const allCharacters = [];
-
-  // Fetch specific characters by ID
-  const specificCharacters = await Promise.all(specificCharacterIDs.map(async (id) => {
+  // Fetch comics by year range
+  for (const year of Array.from({length: endYear - startYear + 1}, (_, i) => startYear + i)) {
     try {
-      const characterRequest = await fetch(`https://gateway.marvel.com:443/v1/public/characters/${id}?ts=${ts}&apikey=${publicKey}&hash=${hash}`);
-      const characterData = await characterRequest.json();
-
-      if (!characterData || !characterData.data || !characterData.data.results || characterData.data.results.length === 0) {
-        console.error(`Character ID ${id} not found`);
-        return null;
-      }
-
-      const character = characterData.data.results[0];
-
-      // Fetch comics for each specific character
-      const comicsRequest = await fetch(`https://gateway.marvel.com:443/v1/public/characters/${id}/comics?limit=${limit}&ts=${ts}&apikey=${publicKey}&hash=${hash}`);
+      const comicsRequest = await fetch(
+        `https://gateway.marvel.com:443/v1/public/comics?` +
+        `dateRange=${year}-01-01,${year}-12-31&` +
+        `orderBy=focDate&limit=${limit}&ts=${ts}&apikey=${publicKey}&hash=${hash}`
+      );
       const comicsData = await comicsRequest.json();
 
-      if (!comicsData || !comicsData.data || !comicsData.data.results) {
-        console.error(`Error fetching comics for character ${character.name}`);
-        return null;
-      }
-
-      const comics = comicsData.data.results.map((comic) => ({
-        comicId: comic.id,
-        comicTitle: comic.title,
-        description: comic.description || "No description available",
-        characters: comic.characters.items.slice(0, 5).map(c => ({ id: c.resourceURI.split('/').pop(), name: c.name })),
-      }));
-
-      return {
-        objectID: character.id,
-        name: character.name,
-        description: character.description || "No description available",
-        thumbnail: `${character.thumbnail.path}.${character.thumbnail.extension}`,
-        comics: comics,
-      };
-    } catch (error) {
-      console.error(`Error processing character ID ${id}:`, error);
-      return null;
-    }
-  }));
-
-  // Filter out null characters and add them to the main array
-  allCharacters.push(...specificCharacters.filter(c => c !== null));
-
-  // Loop through each letter of the alphabet to fetch additional characters
-  for (const letter of alphabet) {
-    try {
-      // Fetch characters starting with the specific letter
-      const characterRequest = await fetch(`https://gateway.marvel.com:443/v1/public/characters?nameStartsWith=${letter}&limit=${limit}&ts=${ts}&apikey=${publicKey}&hash=${hash}`);
-      const characterData = await characterRequest.json();
-
-      if (!characterData || !characterData.data || !characterData.data.results) {
-        console.error(`Error fetching characters for letter ${letter}`);
+      if (!comicsData?.data?.results) {
+        console.error(`Error fetching comics for year ${year}`);
         continue;
       }
 
-      const charactersForLetter = await Promise.all(characterData.data.results.map(async (character) => {
+      // Process each comic
+      const comicsForYear = await Promise.all(comicsData.data.results.map(async (comic) => {
         try {
-          // Fetch comics for each character
-          const comicsRequest = await fetch(`https://gateway.marvel.com:443/v1/public/characters/${character.id}/comics?limit=${limit}&ts=${ts}&apikey=${publicKey}&hash=${hash}`);
-          const comicsData = await comicsRequest.json();
+          // Fetch characters for this comic
+          const charactersRequest = await fetch(
+            `https://gateway.marvel.com:443/v1/public/comics/${comic.id}/characters?` +
+            `ts=${ts}&apikey=${publicKey}&hash=${hash}`
+          );
+          const charactersData = await charactersRequest.json();
 
-          if (!comicsData || !comicsData.data || !comicsData.data.results) {
-            console.error(`Error fetching comics for character ${character.name}`);
-            return null;
-          }
-
-          const comics = comicsData.data.results.map((comic) => ({
-            comicId: comic.id,
-            comicTitle: comic.title,
-            description: comic.description || "No description available",
-            characters: comic.characters.items.slice(0, 5).map(c => ({ id: c.resourceURI.split('/').pop(), name: c.name })),
-          }));
-
-          return {
-            objectID: character.id,
+          const characters = charactersData?.data?.results?.map(character => ({
+            characterId: character.id,
             name: character.name,
             description: character.description || "No description available",
             thumbnail: `${character.thumbnail.path}.${character.thumbnail.extension}`,
-            comics: comics,
+          })) || [];
+
+          return {
+            objectID: comic.id,
+            title: comic.title,
+            description: comic.description || "No description available",
+            thumbnail: `${comic.thumbnail.path}.${comic.thumbnail.extension}`,
+            characters: characters,
+            publicationDate: comic.dates?.find(d => d.type === 'focDate')?.date || null,
+            year: year
           };
         } catch (error) {
-          console.error(`Error processing character ${character.name}:`, error);
+          console.error(`Error processing comic ${comic.title}:`, error);
           return null;
         }
       }));
 
-      // Filter out null characters and add them to the main array
-      allCharacters.push(...charactersForLetter.filter(c => c !== null));
+      // Filter out null comics and add them to the main array
+      allComics.push(...comicsForYear.filter(c => c !== null));
     } catch (error) {
-      console.error(`Error processing letter ${letter}:`, error);
+      console.error(`Error processing year ${year}:`, error);
     }
   }
 
-  // Save all characters to Algolia
+  // Save all comics to Algolia
   await client.saveObjects({
-    indexName: 'marvel_characters',
-    objects: allCharacters,
+    indexName: 'marvel_comics',
+    objects: allComics,
   });
 
-  console.log('Successfully indexed objects!');
+  console.log('Successfully indexed comics!');
 };
 
 // Run the process and handle errors
