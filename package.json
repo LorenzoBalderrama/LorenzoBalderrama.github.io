@@ -1,7 +1,6 @@
 {
   "name": "marvel-search",
   "version": "0.1.0",
-  "homepage": "https://lorenzobalderrama.github.io/public",
   "private": true,
   "dependencies": {
     "@craco/craco": "^7.1.0",
@@ -43,7 +42,6 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
-    "gh-pages": "^6.2.0",
     "postcss": "^8.4.49",
     "react-app-rewired": "^2.2.1",
     "tailwindcss": "^3.4.15"
