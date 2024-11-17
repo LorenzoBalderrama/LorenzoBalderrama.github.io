@@ -40,13 +40,6 @@ const ComicHit = ({ hit }) => {
                   key={index}
                   className="flex items-center bg-gray-700 rounded-full px-3 py-1"
                 >
-                  {character.image && (
-                    <img 
-                      src={character.resourceURI}
-                      alt={character.name}
-                      className="w-4 h-4 rounded-full mr-1"
-                    />
-                  )}
                   <span className="text-xs text-gray-200">{character.name || character}</span>
                 </div>
               ))}

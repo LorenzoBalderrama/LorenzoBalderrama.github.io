@@ -5,7 +5,7 @@ import { RangeSlider as SpectrumRangeSlider } from '@adobe/react-spectrum';
 export function FacetsContainer() {
   return (
     <>
-    <RefinementList attribute="characters"/>
+    <RefinementList attribute="characters.name" showMore={true}/>
     <RangeSlider attribute="prices"/>
     </>
     );
