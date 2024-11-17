@@ -3,29 +3,59 @@ import { Hits, Pagination } from 'react-instantsearch';
 const ComicHit = ({ hit }) => {
   const thumbnailUrl = hit.thumbnail?.portrait || hit.thumbnail?.standard || 'default-image.jpg';
   const price = hit.prices
+  const characters = hit.characters || [];
 
   return (
-    <article className="group relative">
-      <div className="aspect-square overflow-hidden rounded-lg bg-gray-100">
+    <article className="group relative bg-gray-800 rounded-lg overflow-hidden">
+      {/* Comic Cover Image */}
+      <div className="aspect-square overflow-hidden bg-gray-100">
         <img 
           src={thumbnailUrl} 
           alt={hit.title}
           className="h-full w-full object-cover object-center group-hover:opacity-75"
         />
       </div>
-      <div className="mt-4 flex justify-between">
-        <div>
-          <h3 className="text-sm text-gray-700">
-            <span aria-hidden="true" className="absolute inset-0" />
+
+      {/* Comic Info */}
+      <div className="p-4 space-y-3">
+        {/* Title and Price */}
+        <div className="flex justify-between items-center">
+          <h3 className="text-sm font-medium text-white">
             {hit.title}
           </h3>
-          <p className="mt-1 text-sm text-gray-500">Issue #{hit.issueNumber}</p>
-        </div>
-        <div>
-          <p className="text-sm font-medium text-gray-900">
-            ${price.toFixed(2)}
+          <p className="text-sm font-semibold text-green-400">
+            {price > 0 ? `$${price.toFixed(2)}` : 'N/A'}
           </p>
         </div>
+
+        <p className="mt-1 text-sm text-gray-400">Issue #{hit.issueNumber}</p>
+
+        {/* Featured Characters */}
+        {characters.length > 0 && (
+          <div>
+            <h4 className="text-xs font-medium text-gray-400 mb-2">Featured Characters:</h4>
+            <div className="flex flex-wrap gap-2">
+              {characters.slice(0, 3).map((character, index) => (
+                <div 
+                  key={index}
+                  className="flex items-center bg-gray-700 rounded-full px-3 py-1"
+                >
+                  {character.image && (
+                    <img 
+                      src={character.resourceURI}
+                      alt={character.name}
+                      className="w-4 h-4 rounded-full mr-1"
+                    />
+                  )}
+                  <span className="text-xs text-gray-200">{character.name || character}</span>
+                </div>
+              ))}
+              {characters.length > 3 && (
+                <span className="text-xs text-gray-400">+{characters.length - 3} more</span>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </article>
   );
@@ -37,7 +67,7 @@ export function ResultsContainer() {
       <Hits 
         classNames={{
           root: '',
-          list: 'grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4 lg:gap-x-8',
+          list: 'grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
           item: '',
         }}
         hitComponent={ComicHit}
@@ -47,9 +77,9 @@ export function ResultsContainer() {
           className="flex justify-center"
           classNames={{
             list: 'flex space-x-2',
-            item: 'px-3 py-2 rounded-lg border',
-            selectedItem: 'bg-gray-900 text-white border-gray-900',
-            disabledItem: 'opacity-50 cursor-not-allowed',
+            item: 'px-3 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-700',
+            selectedItem: 'bg-red-500 text-white border-red-500 hover:bg-red-600',
+            disabledItem: 'opacity-50 cursor-not-allowed hover:bg-transparent',
           }}
         />
       </div>

@@ -12,6 +12,7 @@ export function FacetsContainer() {
    
 }
 
+// Code from Algolia
 export function RangeSlider(props) {
     const { start, range, canRefine, refine } = useRange(props);
     const { min, max } = range;
