@@ -5,17 +5,22 @@
   "dependencies": {
     "@adobe/react-spectrum": "^3.37.1",
     "@craco/craco": "^7.1.0",
+    "@radix-ui/react-slider": "^1.2.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "add": "^2.0.6",
     "algoliasearch": "^5.14.0",
     "crypto": "^1.0.1",
     "instantsearch.css": "^8.5.1",
     "react": "^18.3.1",
+    "react-aria-components": "^1.4.1",
     "react-dom": "^18.3.1",
+    "react-icons": "^5.3.0",
     "react-instantsearch": "^7.13.8",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yarn": "^1.22.22"
   },
   "scripts": {
     "start": "react-scripts start",
