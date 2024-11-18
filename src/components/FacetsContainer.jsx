@@ -31,6 +31,7 @@ export function FacetsContainer() {
             disabledShowMore: 'opacity-50 cursor-not-allowed',
             loadingShowMore: 'opacity-50 cursor-wait',
           }}
+          showMoreLimit= {60}
           translations={{
             showMore(expanded) {
               return expanded ? 'Show less' : 'Show more'
@@ -58,6 +59,7 @@ export function FacetsContainer() {
             disabledShowMore: 'opacity-50 cursor-not-allowed',
             loadingShowMore: 'opacity-50 cursor-wait',
           }}
+          showMoreLimit= {80}
           translations={{
             showMore(expanded) {
               return expanded ? 'Show less' : 'Show more'
