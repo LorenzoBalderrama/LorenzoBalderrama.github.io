@@ -59,7 +59,7 @@ function App() {
                   Discover Your Next Comic Adventure
                 </h1>
                 <p className="text-xl text-blue-100 mb-6">
-                  Explore thousands of Marvel comics, from classic storylines to the latest releases.
+                  Explore thousands of comics, from classic storylines to the latest releases.
                   Find your favorite superheroes and villains all in one place.
                 </p>
                 <div className="flex gap-4">
@@ -70,7 +70,7 @@ function App() {
                     Browse Comics
                   </button>
                   <button className="border-2 border-white text-white px-6 py-2 rounded-lg font-semibold hover:bg-white/10 transition-colors">
-                    Learn More
+                    <a href="https://github.com/LorenzoBalderrama/LorenzoBalderrama.github.io">Read Me</a>
                   </button>
                 </div>
               </div>
